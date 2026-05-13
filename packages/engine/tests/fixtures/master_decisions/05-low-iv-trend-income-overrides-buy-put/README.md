@@ -1,36 +1,64 @@
-# Fixture 05 — LOW_IV_TREND with `style=income` → sell covered call instead of buying put
+# Fixture 05 — LOW_IV_RANGE, income style → sell covered call partial
 
-**STATUS: SCENARIO SPEC ONLY.** `inputs.json` to be authored in a follow-up
-commit before the M1.24 PR flips from draft → ready-for-review. The replay
-harness `test_master_decision_goldens.py::test_golden_decision_matches[05-low-iv-trend-income-overrides-buy-put]`
-soft-skips while `inputs.json` is absent.
+**Scenario scope refined after spec review.** The original M1.24 spec framed
+this fixture as `LOW_IV_TREND + style=income → SELL_COVERED_CALL_PARTIAL`,
+but `rules.yaml` shows `high_iv_sell_call` only fires for regimes in
+`{HIGH_IV_EVENT, HIGH_IV_PIN, LOW_IV_RANGE}` — NOT `LOW_IV_TREND`. With
+`LOW_IV_TREND + iv_rank=55 + style=income` no rule matches and the pipeline
+falls through to `hold_no_op` (which duplicates fixture 11's coverage).
+
+To exercise the `high_iv_sell_call` rule under an income profile, we use
+`LOW_IV_RANGE` instead (distinct from fixture 03's `HIGH_IV_PIN` setup by
+regime AND by profile style: balanced → income).
 
 | | |
 |---|---|
-| **Regime** | `LOW_IV_TREND` |
-| **Expected matched rule** | `high_iv_sell_call (income style overrides buy_put path)` (per `rules.yaml` + plan v1.2 §22.8) |
+| **Regime** | `LOW_IV_RANGE` |
+| **Expected matched rule** | `high_iv_sell_call` (per `rules.yaml` + plan v1.2 §22.8) |
 | **Expected emit** | `SELL_COVERED_CALL_PARTIAL` |
-| **M1.11b path exercised** | not exercised |
-| **M1.12 path exercised** | not exercised |
+| **M1.11b path exercised** | not exercised (non-collar emit) |
+| **M1.12 path exercised** | not exercised (chain healthy) |
 
 ## Scenario
 
-Same regime as fixture 04 but with the user's profile style set to `income`. The `infer_intent` table (§22.5) explicitly overrides the `LOW_IV_TREND` → `buy_put` mapping to `sell_call` when style is income. With `iv_rank ≥ 50` the `high_iv_sell_call` rule fires (regime ∈ `{HIGH_IV_EVENT, HIGH_IV_PIN, LOW_IV_RANGE}` is the explicit allowlist, but the rule's `iv_rank_gte: 50` + `has_short_call: false` predicates can match LOW_IV_TREND too depending on engine wiring — verify on first regen).
+A range-bound market with elevated IV (above the 50 sell-premium threshold),
+held by an income-style portfolio. The M1.9 `high_iv_sell_call` rule fires
+(regime ∈ `{HIGH_IV_EVENT, HIGH_IV_PIN, LOW_IV_RANGE}` AND `iv_rank ≥ 50`
+AND `has_short_call=False`), emitting `SELL_COVERED_CALL_PARTIAL`. The
+dispatcher routes through `select_strikes(intent="sell_call")` to pick an
+OTM call.
 
-## Trigger conditions
+This fixture is distinct from fixture 03 (HIGH_IV_PIN, balanced) by both
+regime and profile style — exercises the rule's regime-allowlist disjunction
+on the LOW_IV_RANGE arm, and verifies that an income profile doesn't change
+the matched rule when IV is high enough.
 
-`regime = LOW_IV_TREND`, `style = income`, `iv_rank = 55.0`, `has_short_call = False`. Note: the precise rule the pipeline picks depends on `rules.yaml` evaluation order — if `high_iv_sell_call` doesn't fire because `LOW_IV_TREND` isn't in its regime allowlist, this fixture may need a different rule (e.g. the income-style path may fall through to `hold_no_op`). Verify on first regen and update this README if the rule choice differs.
+## Engineered chain (`spot = 410.0`, expiry 2026-06-19, ~30 DTE)
 
-## TODO before authoring `inputs.json`
+OTM calls priced for a clean SELL_COVERED_CALL_PARTIAL pick around the
+profile's `delta_target_band`. Standard 8-strike layout (4 puts below spot,
+4 calls above spot).
 
-1. Pick a `spot` + 8-strike chain layout that places the rule's required
-   strikes in plausible OTM/ITM zones.
-2. Construct `MarketStateResult` with field values that produce the target
-   regime (`regime_score` should dominate `all_scores` to make the choice
-   unambiguous, even though the engine only reads `regime` directly).
-3. Pick `PositionState` flags that satisfy this rule's predicates WITHOUT
-   accidentally tripping a higher-priority rule's predicates.
-4. Mirror the field shape from fixture 01 / 03 / 11 (already authored).
-5. Run `uv run python scripts/regenerate_decision_goldens.py --fixture 05-low-iv-trend-income-overrides-buy-put`
-   locally to produce `expected.json`. Verify the recommendation engine
-   matched `high_iv_sell_call (income style overrides buy_put path)`. Commit both files.
+| Strike | Type | bid | ask | mid | OI | Vol |
+|---|---|---|---|---|---|---|
+| 380 | PUT  | 0.495 | 0.505 | 0.500 | 5000 | 1000 |
+| 390 | PUT  | 0.795 | 0.805 | 0.800 | 5000 | 1000 |
+| 400 | PUT  | 1.495 | 1.505 | 1.500 | 5000 | 1000 |
+| 405 | PUT  | 2.495 | 2.505 | 2.500 | 5000 | 1000 |
+| 415 | CALL | 2.495 | 2.505 | 2.500 | 5000 | 1000 |
+| 420 | CALL | 1.495 | 1.505 | 1.500 | 5000 | 1000 |
+| 425 | CALL | 0.795 | 0.805 | 0.800 | 5000 | 1000 |
+| 435 | CALL | 0.295 | 0.305 | 0.300 | 5000 | 1000 |
+
+## Inputs notes
+
+- `regime = LOW_IV_RANGE` is in the `high_iv_sell_call` rule's regime allowlist.
+- `iv_rank = 55.0` (≥ 50 triggers the rule).
+- `has_short_call = False` is the rule's required position state.
+- `style = income` (distinct from fixture 03's `balanced`).
+- `days_to_next_event = 35` keeps us out of `open_collar_pre_event`'s
+  `days_to_next_event_lte: 7` window.
+- `iv_rank = 55` is above `wheel_on_low_iv_range`'s implicit IV ceiling (the
+  rule has no IV upper bound, but rule-evaluation order picks the
+  higher-priority `high_iv_sell_call` first when both could match —
+  verify on first regen).
