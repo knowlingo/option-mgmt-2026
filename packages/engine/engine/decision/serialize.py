@@ -50,7 +50,7 @@ from __future__ import annotations
 
 import dataclasses
 import math
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 from enum import Enum
 from typing import Any
 
@@ -108,7 +108,7 @@ def _canonicalize(value: Any) -> Any:
         # Naive datetimes assumed UTC, matching engine.decision.hashing
         # canonicalization conventions.
         if value.tzinfo is None:
-            value = value.replace(tzinfo=timezone.utc)
+            value = value.replace(tzinfo=UTC)
         # Normalize +00:00 to Z for cross-environment stability.
         iso = value.isoformat()
         if iso.endswith("+00:00"):

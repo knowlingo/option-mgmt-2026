@@ -11,7 +11,6 @@ this test soft-skips so it doesn't gate the staged authoring cycle.
 from __future__ import annotations
 
 import importlib
-import json
 import sys
 from pathlib import Path
 

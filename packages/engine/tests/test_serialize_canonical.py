@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime, timezone
 from enum import Enum, StrEnum
 
 import pytest
@@ -67,7 +67,7 @@ class TestDatetimeHandling:
         assert result == "2026-05-13T14:30:00Z"
 
     def test_aware_utc_normalized_to_z(self) -> None:
-        result = _canonicalize(datetime(2026, 5, 13, 14, 30, tzinfo=timezone.utc))
+        result = _canonicalize(datetime(2026, 5, 13, 14, 30, tzinfo=UTC))
         assert result == "2026-05-13T14:30:00Z"
 
     def test_aware_non_utc_preserved(self) -> None:
@@ -164,7 +164,7 @@ class TestRoundTrip:
             "x": 0.5,
             "y": (1, 2, 3),
             "z": _Leaf(name="t", value=0.123),
-            "t": datetime(2026, 5, 13, 14, 30, tzinfo=timezone.utc),
+            "t": datetime(2026, 5, 13, 14, 30, tzinfo=UTC),
         }
         a = _canonicalize(sample)
         b = _canonicalize(sample)
