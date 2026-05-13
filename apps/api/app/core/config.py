@@ -29,7 +29,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 
-from engine.confidence import DEFAULT_WEIGHTS as _default_weights
+from engine.confidence import DEFAULT_WEIGHTS as _DEFAULT_WEIGHTS
 from engine.version import __version__ as _engine_version
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -43,9 +43,11 @@ class Settings(BaseSettings):
     # Versioning surfaced via /version (plan §5).
     api_version: str = "0.0.1"
     # M1.24: sourced from the engine package; env var still overrides.
+    # `_engine_version` is lowercase to satisfy ruff N812 (aliasing the
+    # lowercase __version__ symbol); `_DEFAULT_WEIGHTS` stays uppercase to
+    # satisfy ruff N811 (aliasing a constant). Mixed casing is intentional.
     engine_version: str = _engine_version
-    # M1.24: sourced from the engine package; env var still overrides.
-    weights_version: str = _default_weights.version
+    weights_version: str = _DEFAULT_WEIGHTS.version
     git_sha: str = "unknown"
 
     # Database
