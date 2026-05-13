@@ -1,0 +1,15 @@
+{
+  "_M1_24_PLACEHOLDER_RUN_REGEN_FIRST_": true,
+  "_regen_instructions": "Run: cd packages/engine && uv run python scripts/regenerate_decision_goldens.py --fixture 01-high-iv-event-collar-feasible. This placeholder will be replaced with the real DailyDecision output. The harness fails until you do.",
+  "_expected_shape_hint": {
+    "decision_id": "dd_<inputs_hash[:12]>_<as_of.timestamp()>",
+    "engine_version": "1.7.0",
+    "weights_version": "v2.0",
+    "ticker": "MSFT",
+    "spot": 400.0,
+    "escalated": false,
+    "collar_structures": [
+      "expected: one non-None CollarStructure with intent=zero_cost (long_put.strike near 380, short_call.strike near 420, net_debit_credit near 0)"
+    ]
+  }
+}

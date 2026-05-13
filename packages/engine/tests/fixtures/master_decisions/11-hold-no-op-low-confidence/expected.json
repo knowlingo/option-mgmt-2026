@@ -1,0 +1,18 @@
+{
+  "_M1_24_PLACEHOLDER_RUN_REGEN_FIRST_": true,
+  "_regen_instructions": "Run: cd packages/engine && uv run python scripts/regenerate_decision_goldens.py --fixture 11-hold-no-op-low-confidence.",
+  "_expected_shape_hint": {
+    "decision_id": "dd_<inputs_hash[:12]>_<as_of.timestamp()>",
+    "engine_version": "1.7.0",
+    "weights_version": "v2.0",
+    "ticker": "MSFT",
+    "spot": 405.0,
+    "escalated": false,
+    "recommendation_matched_rule": "hold_no_op",
+    "recommendation_emit": "NO_OP",
+    "strike_selections": "expected: []",
+    "executions": "expected: []",
+    "downgrades": "expected: []",
+    "collar_structures": "expected: []"
+  }
+}

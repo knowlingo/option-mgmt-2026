@@ -13,12 +13,24 @@ Optional with defaults:
 
 API_VERSION, ENGINE_VERSION, WEIGHTS_VERSION are surfaced through /version and
 on every persisted DailyDecision per plan v1.2 §5.
+
+Versioning consolidation (M1.24):
+  - `engine_version` defaults to `engine.version.__version__`. Previously this
+    carried a literal default (`"0.0.0"` originally; drifted to `"1.4.0"` via
+    earlier edits and silently stayed behind the engine package).
+  - `weights_version` defaults to `engine.confidence.DEFAULT_WEIGHTS.version`.
+    Same drift class.
+  - Env vars (`ENGINE_VERSION` / `WEIGHTS_VERSION`) still override the defaults
+    for rare cases (e.g. deliberate stamping with a hot-fixed version). In
+    normal operation, the engine package is the source of truth.
 """
 
 from __future__ import annotations
 
 from functools import lru_cache
 
+from engine.confidence import DEFAULT_WEIGHTS as _DEFAULT_WEIGHTS
+from engine.version import __version__ as _ENGINE_VERSION
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -30,8 +42,10 @@ class Settings(BaseSettings):
 
     # Versioning surfaced via /version (plan §5).
     api_version: str = "0.0.1"
-    engine_version: str = "0.0.0"  # bumped when packages/engine ships in M0.6+
-    weights_version: str = "v2.0"  # per v1.2 §22.13 (multiplicative-penalty Confidence Composer)
+    # M1.24: sourced from the engine package; env var still overrides.
+    engine_version: str = _ENGINE_VERSION
+    # M1.24: sourced from the engine package; env var still overrides.
+    weights_version: str = _DEFAULT_WEIGHTS.version
     git_sha: str = "unknown"
 
     # Database

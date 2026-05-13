@@ -1,0 +1,15 @@
+{
+  "_M1_24_PLACEHOLDER_RUN_REGEN_FIRST_": true,
+  "_regen_instructions": "Run: cd packages/engine && uv run python scripts/regenerate_decision_goldens.py --fixture 03-high-iv-pin-sell-call.",
+  "_expected_shape_hint": {
+    "decision_id": "dd_<inputs_hash[:12]>_<as_of.timestamp()>",
+    "engine_version": "1.7.0",
+    "weights_version": "v2.0",
+    "ticker": "MSFT",
+    "spot": 415.0,
+    "escalated": false,
+    "recommendation_matched_rule": "high_iv_sell_call",
+    "recommendation_emit": "SELL_COVERED_CALL_PARTIAL",
+    "collar_structures": ["expected: [null]"]
+  }
+}
