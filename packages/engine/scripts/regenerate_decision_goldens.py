@@ -123,10 +123,8 @@ def main() -> int:
         size = len(text)
         decision = json.loads(text)
         emit = (
-            (decision.get("recommendation") or {})
-            .get("matched_rule", {})
-            .get("emit", "?")
-        )
+            (decision.get("recommendation") or {}).get("matched_rule") or {}
+        ).get("emit", "?")
         regime = (decision.get("market_state") or {}).get("regime", "?")
         confidence = decision.get("confidence", "?")
         print(

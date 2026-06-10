@@ -3,20 +3,20 @@
   "collar_structures": [
     null
   ],
-  "confidence": 0.464822,
+  "confidence": 0.340452,
   "confidence_breakdown": {
     "event_risk_penalty": 0.3,
-    "flow_alignment": 0.3531,
-    "illiquidity_penalty": 0.173333,
-    "penalty_multiplier": 0.870567,
-    "positive_score": 0.53393,
+    "flow_alignment": 0.2775,
+    "illiquidity_penalty": 0.9844,
+    "penalty_multiplier": 0.686049,
+    "positive_score": 0.49625,
     "regime_match": 0.78,
-    "signal_alignment": 0.74,
+    "signal_alignment": 0.665,
     "structure_alignment": 0.34,
     "weights_version": "v2.0"
   },
   "data_freshness": [],
-  "decision_id": "dd_ba1898c59c63_1779287400",
+  "decision_id": "dd_5d50396add29_1779287400",
   "disclaimers": [
     "Educational only",
     "Not financial advice",
@@ -24,44 +24,51 @@
   ],
   "downgrades": [
     {
-      "downgrade_notes": [],
-      "escalated": false,
+      "downgrade_notes": [
+        "original fill_confidence min=0.02 < threshold=0.50; entering ladder",
+        "rung 1 (min_oi=500, min_volume=50, max_spread_bps=200): no contracts cleared the floor; skip",
+        "rung 2 (min_oi=2000, min_volume=100, max_spread_bps=100): no contracts cleared the floor; skip",
+        "escalated: ladder exhausted; final min_fill=0.02 still < threshold=0.50"
+      ],
+      "escalated": true,
       "final_execution": {
-        "aggregate_fill_confidence": 0.826667,
-        "aggregate_liquidity_score": 0.933333,
+        "aggregate_fill_confidence": 0.0156,
+        "aggregate_liquidity_score": 0.026,
         "legs": [
           {
-            "expected_slippage": 0.005002,
-            "fill_confidence": 0.826667,
+            "expected_slippage": 0.216,
+            "fill_confidence": 0.0156,
             "leg_id": "short_call_430.0_2026-06-19",
             "limit_price_band": [
               0.99,
               1.01
             ],
-            "liquidity_score": 0.933333,
+            "liquidity_score": 0.026,
             "size_warnings": [],
-            "spread_bps": 100,
-            "suggested_order_type": "limit"
+            "spread_bps": 4000,
+            "suggested_order_type": "marketable_limit"
           }
         ],
-        "notes": [],
-        "suggested_order_type": "limit"
+        "notes": [
+          "aggregate fill confidence 0.02 below 0.50 \u2014 downgrade callback recommended (re-run Strike Selector with adjusted filters, M1.12)"
+        ],
+        "suggested_order_type": "marketable_limit"
       },
       "final_selection": {
         "emit": "SELL_COVERED_CALL_PARTIAL",
         "legs": [
           {
             "contract": {
-              "ask": 1.005,
-              "bid": 0.995,
+              "ask": 1.2,
+              "bid": 0.8,
               "expiry": "2026-06-19",
               "iv": 0.28,
               "mid": 1.0,
-              "open_interest": 5000,
+              "open_interest": 25,
               "option_type": "CALL",
               "strike": 430.0,
               "underlying": "MSFT",
-              "volume": 1000
+              "volume": 8
             },
             "delta_actual": 0.362798,
             "delta_distance": 0.012798,
@@ -73,43 +80,45 @@
         ],
         "skipped_reason": null
       },
-      "iterations": 0,
+      "iterations": 2,
       "original_execution": {
-        "aggregate_fill_confidence": 0.826667,
-        "aggregate_liquidity_score": 0.933333,
+        "aggregate_fill_confidence": 0.0156,
+        "aggregate_liquidity_score": 0.026,
         "legs": [
           {
-            "expected_slippage": 0.005002,
-            "fill_confidence": 0.826667,
+            "expected_slippage": 0.216,
+            "fill_confidence": 0.0156,
             "leg_id": "short_call_430.0_2026-06-19",
             "limit_price_band": [
               0.99,
               1.01
             ],
-            "liquidity_score": 0.933333,
+            "liquidity_score": 0.026,
             "size_warnings": [],
-            "spread_bps": 100,
-            "suggested_order_type": "limit"
+            "spread_bps": 4000,
+            "suggested_order_type": "marketable_limit"
           }
         ],
-        "notes": [],
-        "suggested_order_type": "limit"
+        "notes": [
+          "aggregate fill confidence 0.02 below 0.50 \u2014 downgrade callback recommended (re-run Strike Selector with adjusted filters, M1.12)"
+        ],
+        "suggested_order_type": "marketable_limit"
       },
       "original_selection": {
         "emit": "SELL_COVERED_CALL_PARTIAL",
         "legs": [
           {
             "contract": {
-              "ask": 1.005,
-              "bid": 0.995,
+              "ask": 1.2,
+              "bid": 0.8,
               "expiry": "2026-06-19",
               "iv": 0.28,
               "mid": 1.0,
-              "open_interest": 5000,
+              "open_interest": 25,
               "option_type": "CALL",
               "strike": 430.0,
               "underlying": "MSFT",
-              "volume": 1000
+              "volume": 8
             },
             "delta_actual": 0.362798,
             "delta_distance": 0.012798,
@@ -124,28 +133,30 @@
     }
   ],
   "engine_version": "1.7.0",
-  "escalated": false,
+  "escalated": true,
   "executions": [
     {
-      "aggregate_fill_confidence": 0.826667,
-      "aggregate_liquidity_score": 0.933333,
+      "aggregate_fill_confidence": 0.0156,
+      "aggregate_liquidity_score": 0.026,
       "legs": [
         {
-          "expected_slippage": 0.005002,
-          "fill_confidence": 0.826667,
+          "expected_slippage": 0.216,
+          "fill_confidence": 0.0156,
           "leg_id": "short_call_430.0_2026-06-19",
           "limit_price_band": [
             0.99,
             1.01
           ],
-          "liquidity_score": 0.933333,
+          "liquidity_score": 0.026,
           "size_warnings": [],
-          "spread_bps": 100,
-          "suggested_order_type": "limit"
+          "spread_bps": 4000,
+          "suggested_order_type": "marketable_limit"
         }
       ],
-      "notes": [],
-      "suggested_order_type": "limit"
+      "notes": [
+        "aggregate fill confidence 0.02 below 0.50 \u2014 downgrade callback recommended (re-run Strike Selector with adjusted filters, M1.12)"
+      ],
+      "suggested_order_type": "marketable_limit"
     }
   ],
   "flow_score": {
@@ -154,19 +165,19 @@
     "breakdown": {
       "event": 0.1,
       "gamma": 0.3,
-      "iv": 0.6,
-      "structure": 0.7
+      "iv": 0.5,
+      "structure": 0.5
     },
-    "bullish_score": 0.55,
-    "confidence": 0.7,
-    "explanation": "m1.24 fixture 03 \u2014 pin setup with elevated IV",
-    "gamma_risk": 0.25,
+    "bullish_score": 0.5,
+    "confidence": 0.55,
+    "explanation": "m1.24 fixture 12 \u2014 pin setup like fixture 03, but chain is intentionally illiquid (OI=25, vol=8, wide spreads) so M1.12 ladder exhausts",
+    "gamma_risk": 0.3,
     "gamma_sign": 1,
-    "pin_probability": 0.7,
+    "pin_probability": 0.65,
     "recommended_action": "SELL_CALL_PARTIAL",
-    "score": 0.62
+    "score": 0.5
   },
-  "inputs_hash": "sha256:ba1898c59c63e044e56b2d810aaf6149b3cba307007bed9bc79631569ffb5959",
+  "inputs_hash": "sha256:5d50396add29044c3a314373cbbdb81efb14834a205eb81e343ec311a205d6ac",
   "market_state": {
     "all_scores": {
       "BREAKOUT": 0.0,
@@ -197,7 +208,9 @@
     "regime_score": 0.78,
     "spot": 415.0,
     "tags": [
-      "m1_24_fixture_03"
+      "m1_24_fixture_12",
+      "illiquid_chain",
+      "ladder_exhaust_target"
     ],
     "trend_strength": 0.4
   },
@@ -216,15 +229,15 @@
     "candidates_considered": [
       "high_iv_sell_call"
     ],
-    "confidence": 0.485876,
+    "confidence": 0.451588,
     "confidence_breakdown": {
       "event_risk_penalty": 0.3,
-      "flow_alignment": 0.3531,
+      "flow_alignment": 0.2775,
       "illiquidity_penalty": 0.0,
       "penalty_multiplier": 0.91,
-      "positive_score": 0.53393,
+      "positive_score": 0.49625,
       "regime_match": 0.78,
-      "signal_alignment": 0.74,
+      "signal_alignment": 0.665,
       "structure_alignment": 0.34,
       "weights_version": "v2.0"
     },
@@ -256,7 +269,7 @@
       "Assignment risk near expiry"
     ],
     "warnings": [
-      "Borderline FlowScore (+0.6) \u2014 consider waiting for clearer signal"
+      "Borderline FlowScore (+0.5) \u2014 consider waiting for clearer signal"
     ]
   },
   "spot": 415.0,
@@ -266,16 +279,16 @@
       "legs": [
         {
           "contract": {
-            "ask": 1.005,
-            "bid": 0.995,
+            "ask": 1.2,
+            "bid": 0.8,
             "expiry": "2026-06-19",
             "iv": 0.28,
             "mid": 1.0,
-            "open_interest": 5000,
+            "open_interest": 25,
             "option_type": "CALL",
             "strike": 430.0,
             "underlying": "MSFT",
-            "volume": 1000
+            "volume": 8
           },
           "delta_actual": 0.362798,
           "delta_distance": 0.012798,
