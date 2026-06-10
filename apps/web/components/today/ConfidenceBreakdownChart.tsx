@@ -108,7 +108,7 @@ export function ConfidenceBreakdownChart({ confidence, breakdown }: Props) {
           positive {Math.round(breakdown.positive_score * 100)}% &times;{" "}
           {breakdown.penalty_multiplier.toFixed(2)} = {confidencePct}%
         </span>
-        <span>weights v{breakdown.weights_version}</span>
+        <span>weights {breakdown.weights_version}</span>
       </p>
     </section>
   );
