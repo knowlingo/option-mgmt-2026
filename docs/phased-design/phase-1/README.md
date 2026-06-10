@@ -36,7 +36,7 @@ Phase 1 ships the engine-first MVP per master plan §17. Aggregate size: ~5 week
 | M1.22 | User Strategy Profile UI + persona presets | M | shipped | [PR #17](https://github.com/knowlingo/option-mgmt-2026/pull/17) → `a87fdfb`. [Dev spec](./m1.22-profile-ui-persona-presets.md) (incl. post-ship reconciliation). **Dependency-free (Path A)** `/settings`: native controlled inputs (`<select>` / range / checkbox) + a `saveProfile` **server action** — no RHF/zod/react-query/shadcn (none installed; lockfile not regenerable here). Real **8-field** `UserStrategyProfile` (the spec's persona/zod fields don't exist on the engine schema); components in `components/settings/`. Adds a Today · Settings nav. |
 | M1.23 | Outcome manual entry + history view | M | shipped | [PR #19](https://github.com/knowlingo/option-mgmt-2026/pull/19) → `9e55168`. [Dev spec](./m1.23-outcome-tracker.md) (authored against the shipped API; incl. post-ship reconciliation). **Dependency-free (Path A)** `/outcomes`: manual entry + cursor-paginated history + inline edit + stats; mutations via server actions. Real `/outcomes` shapes (M1.17) — `pnl_*` are **JSON strings** (`Decimal`→string), not numbers; row shows the decision UUID (no decision-summary join exists). Components in `components/outcomes/`. Adds the Outcomes nav. |
 | M1.24 | Golden tests (12 DailyDecision snapshots) + companion tooling housekeeping (CHANGELOG drift guard + `Settings` engine_version/weights_version consolidation) | M | shipped | [PR #3](https://github.com/knowlingo/option-mgmt-2026/pull/3) → `7fec498`. [Dev spec](./m1.24-master-decision-goldens.md) (incl. post-ship reconciliation). Engine `1.6.0` → `1.7.0`. 12 named fixtures under `tests/fixtures/master_decisions/` + parametrized `pytest` replay harness + `engine.decision.serialize_canonical` + regeneration script + suite-level meta tests. Bundles `scripts/check_changelog_entry.sh` and `Settings` consolidation. **Goldens regenerated via [PR #4](https://github.com/knowlingo/option-mgmt-2026/pull/4)** (phiphi325) which also fixed an `iv_rank`/`iv_percentile`/`iv_rank_change_1d` `[0-100]`→`[0-1]` fixture-scale bug. Closes 3 of the 4 remaining Phase 1 Done bar items; M1.25 closes the last (Playwright E2E). |
-| M1.25 | Calibration tests + Playwright E2E + polish | M | planned | TBD — the Playwright E2E flows should also cover the **yearline evidence panel** (OM-Y3) on `/today`, including its empty/stale states (decide whether it gets its own flow). |
+| M1.25 | Calibration tests + Playwright E2E + polish | M | shipped | [PR #21](https://github.com/knowlingo/option-mgmt-2026/pull/21) → `332b89d`. [Dev spec](./m1.25-calibration-e2e-polish.md) (incl. post-ship reconciliation). **Calibration scaffold** (engine `tests/test_calibration.py` — bin-by-confidence + monotonic-success machinery + integration smoke over the 12 real golden confidences; tests-only, no engine bump; real corpus is M3.10). **Playwright E2E authored but DORMANT** — `@playwright/test` can't be added under `--frozen-lockfile` here, so the specs/config live in `apps/web/e2e/` excluded from vitest/tsc/eslint, with a documented activation path + `e2e` CI-job YAML. Exit criterion #7 is met as *specs authored + activation documented*, not a green gate. Polish: per-route page titles. Future E2E should also cover the OM-Y3 yearline panel empty/stale states. |
 
 > **Yearline OM-Y4 sequencing — deferred until after Phase 1's decision + calibration surface.**
 > The yearline **read-only** track (OM-Y0–Y3) is merged and parallel to Phase 1. The
@@ -53,6 +53,15 @@ Phase 1 ships the engine-first MVP per master plan §17. Aggregate size: ~5 week
 > So: finish Phase 1 (esp. M1.25 calibration), then do OM-Y4 when the composer change
 > can be calibrated. Full build steps + traps:
 > [`docs/enhancements/yearline/implementation/HANDOFF.md`](../../enhancements/yearline/implementation/HANDOFF.md).
+>
+> **Update (M1.25 shipped, `332b89d`):** the Phase-1 milestone sequence (M1.x) is
+> complete, so OM-Y4's *structural* blocker (don't mutate the decision mid-Phase-1
+> / fight the M1.24 golden lock + in-flight UI) is now lifted. Two caveats remain
+> before OM-Y4: M1.25 shipped only the **calibration scaffold** — the real
+> weight-justification corpus is **M3.10** (needs accumulated `/outcomes`); and the
+> **Playwright E2E is authored but not yet a CI gate** (lockfile regen + `e2e` job —
+> see the M1.25 dev spec). OM-Y4 will reuse `engine.decision.serialize_canonical`
+> (M1.24) as its back-compat net.
 
 ## Status legend
 
