@@ -10,7 +10,8 @@ export default defineConfig({
     setupFiles: ["./tests/setup.ts"],
     css: true,
     include: ["tests/**/*.{test,spec}.{ts,tsx}", "**/*.{test,spec}.{ts,tsx}"],
-    exclude: ["node_modules", ".next", "dist"],
+    // e2e/** holds Playwright specs (M1.25) — run by `pnpm e2e`, never vitest.
+    exclude: ["node_modules", ".next", "dist", "e2e/**"],
   },
   resolve: {
     alias: {
