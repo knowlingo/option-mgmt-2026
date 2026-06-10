@@ -51,7 +51,7 @@ export function StackedConfidenceBar({ segments, height = 40, className }: Props
           <YAxis type="category" dataKey="name" hide />
           <Tooltip
             cursor={false}
-            formatter={(value: number, name: string) => [`${(value * 100).toFixed(1)}%`, name]}
+            formatter={(value, name) => [`${(Number(value) * 100).toFixed(1)}%`, String(name)]}
           />
           {segments.map((s) => (
             <Bar
