@@ -34,8 +34,9 @@ beforeEach(() => {
 describe("OutcomeRow", () => {
   it("renders the truncated decision id and formatted P&L (string wire form)", () => {
     render(<OutcomeRow outcome={ROW} onUpdated={() => {}} />);
+    // The row shows the truncated daily_decision_id (not the outcome id).
     expect(screen.getByTestId(`row-decision-${ROW.id}`)).toHaveTextContent(
-      "11111111",
+      "aaaaaaaa",
     );
     expect(screen.getByTestId(`row-pnl_realized-${ROW.id}`)).toHaveTextContent(
       "$1,250.00",
