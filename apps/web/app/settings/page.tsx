@@ -14,8 +14,13 @@
  * shape.
  */
 
+import type { Metadata } from "next";
+
 import { UserStrategyProfileForm } from "@/components/settings/UserStrategyProfileForm";
 import { getProfile } from "@/lib/api/profile";
+
+// Per-route tab title (M1.25 polish) — overrides the global layout title.
+export const metadata: Metadata = { title: "Settings — Option Mgmt" };
 
 export const dynamic = "force-dynamic"; // per-user + mutable; never cache, never prerender
 

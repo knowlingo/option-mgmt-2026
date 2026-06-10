@@ -8,7 +8,8 @@ import next from "eslint-config-next/core-web-vitals";
 const config = [
   ...next,
   {
-    ignores: [".next/**", "node_modules/**", "dist/**", "out/**", "coverage/**"],
+    // e2e/** = dormant Playwright specs (M1.25); not part of the lint surface.
+    ignores: [".next/**", "node_modules/**", "dist/**", "out/**", "coverage/**", "e2e/**"],
   },
 ];
 

@@ -11,8 +11,13 @@
  * `next build`. A 401 bubbles to `error.tsx`.
  */
 
+import type { Metadata } from "next";
+
 import { OutcomeTracker } from "@/components/outcomes/OutcomeTracker";
 import { getOutcomes } from "@/lib/api/outcomes";
+
+// Per-route tab title (M1.25 polish) — overrides the global layout title.
+export const metadata: Metadata = { title: "Outcomes — Option Mgmt" };
 
 export const dynamic = "force-dynamic";
 
