@@ -1,39 +1,33 @@
 import { defineConfig, devices } from "@playwright/test";
 
+import { STORAGE_STATE } from "./global-setup";
+
 /**
- * Playwright config for the Phase-1 E2E flows (M1.25).
+ * Playwright config for the Phase-1 E2E flows (M1.25; activated in the E2E
+ * CI-activation PR).
  *
- * ⚠️ DORMANT IN CI — read before editing.
+ * `@playwright/test` is now a devDependency (the lockfile was regenerated with
+ * the CI-pinned pnpm and verified against `pnpm install --frozen-lockfile`).
+ * The `e2e/` dir stays excluded from the `web` job's vitest / tsc / eslint /
+ * `next build` surface — Playwright runs these specs in the dedicated `e2e` CI
+ * job (`pnpm -C apps/web e2e`), which boots postgres + the API + `next start`,
+ * seeds a session via `apps/api/scripts/e2e_seed.py`, and installs the chromium
+ * browser.
  *
- * `@playwright/test` is intentionally NOT in `apps/web/package.json`: adding it
- * would change `pnpm-lock.yaml`, which the `web` CI job consumes with
- * `pnpm install --frozen-lockfile` (a regenerated lockfile is not producible in
- * the current implementation environment). These specs are therefore excluded
- * from the running test/lint/build surface:
- *   - vitest:  `exclude: ["e2e/**", …]`     (apps/web/vitest.config.ts)
- *   - tsc:     `exclude: ["e2e", …]`          (apps/web/tsconfig.json)
- *   - eslint:  `ignores: ["e2e/**", …]`       (apps/web/eslint.config.mjs)
- *   - next build: not under `app/`, not imported → ignored.
- *
- * Activate (out-of-band, regenerates the lockfile) + add the `e2e` CI job
- * documented in the M1.25 dev spec:
- *
- *   pnpm -C apps/web add -D @playwright/test
- *   pnpm -C apps/web exec playwright install --with-deps chromium
- *   BASE_URL=http://localhost:3000 pnpm -C apps/web e2e
- *
- * The CI `e2e` job must boot the full stack (postgres service + alembic +
- * uvicorn API + `next start`) and seed a session + fixture data before running
- * the authenticated Settings / Outcomes flows.
+ * `globalSetup` writes a storage state from `E2E_ACCESS_TOKEN` (the httpOnly
+ * `access_token` cookie). Authenticated specs `test.skip` when that env is
+ * absent, so the job is green even if the seed step doesn't run.
  */
 export default defineConfig({
   testDir: ".",
+  globalSetup: "./global-setup.ts",
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
   reporter: "list",
   use: {
     baseURL: process.env.BASE_URL ?? "http://localhost:3000",
+    storageState: STORAGE_STATE,
     trace: "on-first-retry",
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
