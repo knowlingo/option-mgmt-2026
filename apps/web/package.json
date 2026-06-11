@@ -2,7 +2,7 @@
   "name": "option-mgmt-web",
   "version": "0.0.1",
   "private": true,
-  "description": "MSFT Option Risk Management Engine — Next.js 16.2.6 web app",
+  "description": "MSFT Option Risk Management Engine \u2014 Next.js 16.2.6 web app",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -24,6 +24,7 @@
     "tailwind-merge": "^2.5.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.50.0",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.0",

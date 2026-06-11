@@ -8,7 +8,8 @@ import { expect, test } from "@playwright/test";
  *
  * Reality note (M1.25 review): the plan's literal "disclaimer → CSV-upload →
  * Today" flow can't be fully browser-driven because there is **no CSV-upload
- * UI** — data import is API-only (`POST /data/*/import-csv`). The activated
+ * UI** — data import is API-only (`POST /data/{positions,chain,iv}/import-csv`).
+ * The activated
  * `e2e` CI job seeds chain/positions/iv via the API in setup; this spec then
  * asserts the disclaimer gate + that the Today surface renders (either the
  * decision card when data is seeded, or the actionable prerequisite CTA the
